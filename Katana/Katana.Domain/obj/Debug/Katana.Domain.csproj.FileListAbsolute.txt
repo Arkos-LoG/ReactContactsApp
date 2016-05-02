@@ -1,5 +1,0 @@
-C:\Users\mwilliams\Desktop\MyStuff\Projects\Katana\Katana\Katana.Domain\bin\Debug\Katana.Domain.dll
-C:\Users\mwilliams\Desktop\MyStuff\Projects\Katana\Katana\Katana.Domain\bin\Debug\Katana.Domain.pdb
-C:\Users\mwilliams\Desktop\MyStuff\Projects\Katana\Katana\Katana.Domain\obj\Debug\Katana.Domain.dll
-C:\Users\mwilliams\Desktop\MyStuff\Projects\Katana\Katana\Katana.Domain\obj\Debug\Katana.Domain.pdb
-C:\Users\mwilliams\Desktop\MyStuff\Projects\Katana\Katana\Katana.Domain\obj\Debug\Katana.Domain.csprojResolveAssemblyReference.cache
