@@ -38,28 +38,15 @@ namespace Katana
         // GET api/contact/5
         public IHttpActionResult Get(double id)
         {
-            //
-            //  NOTE - THIS ISN'T BEING USED BUT WANTED TO SHOW HOW SERVER CACHING WOULD WORK
-            //
 
             if (id < 1)
             {
                 return BadRequest("Invalid Contact Id");
             }
 
-            string key = string.Format("Get-{0}", id);
-            Contact contact = null;
-
             try
-            {
-                if (!CacheHelper.Get(key, out contact))
-                {
-                    contact = _contactRepository.Get(id);
-                    CacheHelper.Add(contact, key);
-                }
-                // else "contact" is in cache
-
-                return Ok(contact);
+            {        
+                return Ok(_contactRepository.Get(id));
             }
             catch (Exception ex)
             {
@@ -69,13 +56,11 @@ namespace Katana
         }
 
         // POST api/contact {contact}
-        public IHttpActionResult Post([FromBody] JObject data)
+        public IHttpActionResult Post(Contact contact)
         {
 
             try
             {
-                var contact = data.ToObject<Contact>(); // this is one way to do it. I'll do a different way for PUT
-
                 if (contact == null || contact.Id < 1)
                 {
                     return BadRequest("No or bad data was sent.");
