@@ -7,7 +7,6 @@ class ContactStore extends EventEmitter {
   constructor() {
     super()
     this.contacts = []; // set to empty array until Action dispatches RECEIVE_CONTACTS
-
   }
   
   updateEditStatusForContact(id, edit)
@@ -20,17 +19,15 @@ class ContactStore extends EventEmitter {
      this.emit("change");
   }
   
-  
   getAll() {
-    return this.contacts;
+    return this.contacts.sort(this.compare);
   }
-
 
   handleActions(action) {
     
     switch(action.type) {
         case "CREATE_CONTACT": 
-          this.contacts = action.contacts;
+          this.contacts.push(action.contact); // = action.contacts;
           this.emit("change");          
           break;
         case "RECEIVE_CONTACTS": 
@@ -52,15 +49,26 @@ class ContactStore extends EventEmitter {
         case "CANCEL_EDIT":  
           this.updateEditStatusForContact(action.id, false);
           break;
-      }
-      
+      }      
   }
 
-
+  // https://www.sitepoint.com/sort-an-array-of-objects-in-javascript/ 
+  compare(a, b) {
+    // Use toUpperCase() to ignore character casing
+    const nameA = a.name.toUpperCase();
+    const nameB = b.name.toUpperCase();
+  
+    let comparison = 0;
+    if (nameA > nameB) {
+      comparison = 1;
+    } else if (nameA < nameB) {
+      comparison = -1;
+    }
+    return comparison;
+  }
 }
 
 const contactStore = new ContactStore;
 dispatcher.register(contactStore.handleActions.bind(contactStore));
 
 export default contactStore;  // make available for import for Contacts to subscribe to events
-

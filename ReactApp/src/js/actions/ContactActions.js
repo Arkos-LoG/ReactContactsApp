@@ -2,22 +2,20 @@ import dispatcher from "../dispatcher";
 import axios from "axios";
 
 const axiosInstance = axios.create({
-      baseURL: 'http://localhost:9000'
-  });
-  
-  
+      baseURL: 'http://127.0.0.1:8529/_db/_system/react-contacts/contacts' // Foxx
+      //baseURL: 'http://localhost:8088/api/contacts' // ASP.NET CORE
+});
+    
 ////////////////////////////////////////////////////////////////////////////////
 //  ACTIONS
 ///////////////////////////////////////////////////////////////////////////////
-
 
 export function editContact(id) {
     
   dispatcher.dispatch({
     type: "EDIT_CONTACT",
     id,
-  });
-  
+  });  
 }
 
 export function cancelEditContact(id) {
@@ -28,13 +26,12 @@ export function cancelEditContact(id) {
   });
 }
 
-
 export function createContact(contact) {
   
   const { id, name, email, address, phone } = contact; // Destructuring...  ES2015... https://babeljs.io/docs/learn-es2015/ 
 
-  axiosInstance.post('/api/contact', {
-      id: id, 
+  axiosInstance.post('', {
+      //id: id, 
       name: name, 
       email: email, 
       address: address, 
@@ -43,20 +40,18 @@ export function createContact(contact) {
   .then(function(response){
     console.log(response.data); 
     console.log(response.status);     
-    dispatcher.dispatch({type: "CREATE_CONTACT", contacts: response.data });
+    dispatcher.dispatch({type: "CREATE_CONTACT", contact: response.data });//contacts: response.data });
   })
   .catch(function (response) {
     console.log(response);
     console.log(response.status); 
     dispatcher.dispatch({type: "ERROR_CREATE_CONTACT", contacts: response });
-  });
-  
+  });  
 }
-
 
 export function deleteContact(id) {
   
-  axiosInstance.delete('/api/contact', {
+  axiosInstance.delete('', {
     params: {
       ID: id
     }
@@ -70,15 +65,14 @@ export function deleteContact(id) {
     console.log(response);
     console.log(response.status); 
     dispatcher.dispatch({type: "ERROR_DELETE_CONTACT", contacts: response });
-  });
-    
+  });    
 }
 
 export function updateContact(contact) {
    
   const { id, name, email, address, phone } = contact; 
 
-  axiosInstance.put('/api/contact', {
+  axiosInstance.put('', {
       id: id, 
       name: name, 
       email: email, 
@@ -94,16 +88,14 @@ export function updateContact(contact) {
     console.log(response);
     console.log(response.status); 
     dispatcher.dispatch({type: "ERROR_UPDATE_CONTACT", contacts: response });
-  });
-  
+  });  
 }
-
 
 export function reloadContacts() {
    
   dispatcher.dispatch({type: "FETCH_CONTACTS"});
   
-  axiosInstance.get('/api/contact')
+  axiosInstance.get('')
     .then(function(response){
       console.log(response.data); 
       console.log(response.status);     
@@ -113,9 +105,5 @@ export function reloadContacts() {
       console.log(response);
       console.log(response.status); 
       dispatcher.dispatch({type: "ERROR_RECEIVE_CONTACTS", contacts: response });
-  });
-    
- 
+  });    
 }
-
-
