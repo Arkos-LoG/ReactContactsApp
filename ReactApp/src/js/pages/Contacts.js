@@ -1,15 +1,18 @@
 // reference for component...Mount etc.
 // http://facebook.github.io/react/docs/component-specs.html#mounting-componentdidmount 
 
-
 import React from "react";
+
+import AuthenticatedComponent from '../components/AuthenticatedComponent';
 
 import Contact from "../components/Contact";
 import * as ContactActions from "../actions/ContactActions"; // import * as -> Import an entire module's contents.  https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import 
 import ContactStore from "../stores/ContactStore";
 
 // Contacts component
-export default class Contacts extends React.Component {
+
+export default AuthenticatedComponent(class Contacts extends React.Component {
+//export default class Contacts extends React.Component {
   constructor() {
     super();
     this.getContacts = this.getContacts.bind(this);
@@ -19,7 +22,6 @@ export default class Contacts extends React.Component {
      
   }
   
-
 /////////////////////////////////////////////
 //  STORE UPDATE CALLS & EVENT LISTENERS
 ////////////////////////////////////////////
@@ -40,17 +42,14 @@ export default class Contacts extends React.Component {
     
   }
 
-
 /////////////////////////////////////////////
 //  ACTION CALLS
 ////////////////////////////////////////////
-
 
 // Fetch data here according to https://facebook.github.io/react/tips/initial-ajax.html 
   componentDidMount() {
     ContactActions.reloadContacts();  // Flux pattern -> tell Action to go get the contacts from Web API after rendering occurs; then,
   }                                   //                 action will send a dispatch to the store, which will create change event which this component is listening for
-
 
   updateContact(contact) {
     ContactActions.updateContact(contact); 
@@ -68,16 +67,14 @@ export default class Contacts extends React.Component {
     ContactActions.cancelEditContact(id);   
   }
 
-
 /////////////////////////////////////////////
 //  RENDER
 ////////////////////////////////////////////
 
-
   render() {
     
     const { contacts } = this.state;
-
+ 
     // map contacts "snatched" from state to ContactComponents
     const ContactComponents = contacts.map((contact) => {
                                         
@@ -99,4 +96,6 @@ export default class Contacts extends React.Component {
   }
 }
 
+// new
+);
 

@@ -2,8 +2,8 @@ import dispatcher from "../dispatcher";
 import axios from "axios";
 
 const axiosInstance = axios.create({
-      baseURL: 'http://127.0.0.1:8529/_db/_system/react-contacts/contacts' // Foxx
-      //baseURL: 'http://localhost:8088/api/contacts' // ASP.NET CORE
+      //baseURL: 'http://127.0.0.1:8529/_db/_system/react-contacts/contacts' // Foxx
+      baseURL: 'http://localhost:8088/api/' // ASP.NET CORE
 });
     
 ////////////////////////////////////////////////////////////////////////////////
@@ -26,11 +26,34 @@ export function cancelEditContact(id) {
   });
 }
 
+export function loginUser(user) {
+  
+  const { name, password } = user; // Destructuring...  ES2015... https://babeljs.io/docs/learn-es2015/ 
+
+  axiosInstance.post('auth/token', { 
+      email: name, 
+      password: password
+  })
+  .then(function(response){
+    console.log(response.data); 
+    console.log(response.status);
+    
+    //response.data.token
+
+    dispatcher.dispatch({type: "LOGIN_USER", jwt: response.data.token });
+  })
+  .catch(function (response) {
+    console.log(response);
+    console.log(response.status); 
+    //dispatcher.dispatch({type: "ERROR_LOGIN_USER", contacts: response });
+  });  
+}
+
 export function createContact(contact) {
   
   const { id, name, email, address, phone } = contact; // Destructuring...  ES2015... https://babeljs.io/docs/learn-es2015/ 
 
-  axiosInstance.post('', {
+  axiosInstance.post('contacts', {
       //id: id, 
       name: name, 
       email: email, 
@@ -51,7 +74,7 @@ export function createContact(contact) {
 
 export function deleteContact(id) {
   
-  axiosInstance.delete('', {
+  axiosInstance.delete('contacts', {
     params: {
       ID: id
     }
@@ -72,7 +95,7 @@ export function updateContact(contact) {
    
   const { id, name, email, address, phone } = contact; 
 
-  axiosInstance.put('', {
+  axiosInstance.put('contacts', {
       id: id, 
       name: name, 
       email: email, 
@@ -95,11 +118,12 @@ export function reloadContacts() {
    
   dispatcher.dispatch({type: "FETCH_CONTACTS"});
   
-  axiosInstance.get('')
+  axiosInstance.get('contacts')
     .then(function(response){
-      console.log(response.data); 
-      console.log(response.status);     
-      dispatcher.dispatch({type: "RECEIVE_CONTACTS", contacts: response.data });
+      //console.log(response.data); 
+      console.log(response.status);
+      if (response.data.indexOf("<!DOCTYPE html>") === -1)     
+        dispatcher.dispatch({type: "RECEIVE_CONTACTS", contacts: response.data });
     })
     .catch(function (response) {
       console.log(response);

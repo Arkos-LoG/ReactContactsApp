@@ -5,6 +5,7 @@
   "main": "webpack.config.js",
   "dependencies": {
     "axios": "^0.11.0",
+    "babel-core": "^6.25.0",
     "babel-loader": "^6.2.0",
     "babel-plugin-add-module-exports": "^0.1.2",
     "babel-plugin-react-html-attrs": "^2.0.0",
@@ -24,7 +25,8 @@
     "react-router": "^1.0.3",
     "react-validation-mixin": "^5.3.4",
     "webpack": "^1.13.0",
-    "webpack-dev-server": "^1.14.1"
+    "webpack-dev-server": "^1.14.1",
+    "jwt-decode": "^1.1.0"
   },
   "devDependencies": {},
   "scripts": {

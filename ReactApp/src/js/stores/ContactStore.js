@@ -1,5 +1,6 @@
 import { EventEmitter } from "events";  // built into Nodejs for doing -> this.emit("change");
 import _ from "lodash";
+import jwt_decode from 'jwt-decode';
 
 import dispatcher from "../dispatcher";
 
@@ -7,6 +8,9 @@ class ContactStore extends EventEmitter {
   constructor() {
     super()
     this.contacts = []; // set to empty array until Action dispatches RECEIVE_CONTACTS
+
+    this._user = null;
+    this._jwt = null;
   }
   
   updateEditStatusForContact(id, edit)
@@ -20,7 +24,15 @@ class ContactStore extends EventEmitter {
   }
   
   getAll() {
-    return this.contacts.sort(this.compare);
+    if (this.contacts.length > 1)
+      return this.contacts.sort(this.compare);
+    else
+      return this.contacts; 
+  }
+
+  /// FOR LOGIN /////////
+  isLoggedIn() {
+    return !!this._user;
   }
 
   handleActions(action) {
@@ -48,6 +60,17 @@ class ContactStore extends EventEmitter {
           break;
         case "CANCEL_EDIT":  
           this.updateEditStatusForContact(action.id, false);
+          break;
+        
+        case "LOGIN_USER":
+          this._jwt = action.jwt;
+          this._user = jwt_decode(this._jwt);
+          //this.emitChange();
+          this.emit("change");
+          break;
+        case "LOGOUT_USER":
+          //this._user = null;
+          //this.emitChange();
           break;
       }      
   }

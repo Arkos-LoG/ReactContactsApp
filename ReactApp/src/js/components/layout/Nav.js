@@ -20,6 +20,7 @@ export default class Nav extends React.Component {
     const contactsClass = location.pathname === "/" ? "active" : "";
     const newContactClass = location.pathname.match(/^\/newContact/) ? "active" : "";
     const aboutClass = location.pathname.match(/^\/about/) ? "active" : "";
+    const loginClass = location.pathname.match(/^\/login/) ? "active" : "";
     const navClass = collapsed ? "collapse" : "";
 
     return (
@@ -28,6 +29,7 @@ export default class Nav extends React.Component {
           <div class="navbar-header">
             <button type="button" class="navbar-toggle" onClick={this.toggleCollapse.bind(this)} >
               <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
@@ -43,6 +45,9 @@ export default class Nav extends React.Component {
               </li>
               <li class={aboutClass}>
                 <Link to="about" onClick={this.toggleCollapse.bind(this)}>About</Link>
+              </li>
+              <li class={loginClass}>
+                <Link to="login" onClick={this.toggleCollapse.bind(this)}>Login</Link>
               </li>
             </ul>
           </div>
