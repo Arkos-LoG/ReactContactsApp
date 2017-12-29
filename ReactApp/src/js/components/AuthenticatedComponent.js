@@ -31,32 +31,34 @@ export default (ComposedComponent) => {
     }
 
     componentDidMount() {
-      ContactStore.on("change", this.onChange);
+      ContactStore.on("change", this.onChange.bind(this));
     }
 
     onChange() {
-      this.setState(this.getLoginState());
+      this.setState(this.getLoginState.bind(this));
     }
 
     componentWillUnmount() {
       //LoginStore.removeChangeListener(this.changeListener);
-      ContactStore.removeListener("change", this.onChange);
+      ContactStore.removeListener("change", this.onChange.bind(this));
     }
 
     render() {
+      //if (false) {
       if (!ContactStore.isLoggedIn()) {
         this.props.history.pushState(null, "/login");
         return null;
-      } else {
-        return (
-          <ComposedComponent
-            {...this.props}
-            user={this.state.user}
-            jwt={this.state.jwt}
-            userLoggedIn={this.state.userLoggedIn}
-            test={this.state.test} />
-          );
-        }
+      }
+
+      return (
+        <ComposedComponent
+          {...this.props}
+          user={this.state.user}
+          jwt={this.state.jwt}
+          userLoggedIn={this.state.userLoggedIn}
+          test={this.state.test} />
+        );
+        
       }
 
   }

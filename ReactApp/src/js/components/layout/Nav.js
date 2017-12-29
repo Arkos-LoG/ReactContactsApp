@@ -40,9 +40,9 @@ export default class Nav extends React.Component {
               <li class={contactsClass}>
                 <IndexLink to="/" onClick={this.toggleCollapse.bind(this)}>Contacts</IndexLink>
               </li>
-              <li class={newContactClass}>
+              {/* <li class={newContactClass}>
                 <Link to="newContact" onClick={this.toggleCollapse.bind(this)}>New Contact</Link>
-              </li>
+              </li> */}
               <li class={aboutClass}>
                 <Link to="about" onClick={this.toggleCollapse.bind(this)}>About</Link>
               </li>

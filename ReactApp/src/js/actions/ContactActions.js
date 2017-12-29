@@ -116,7 +116,7 @@ export function updateContact(contact) {
 
 export function reloadContacts() {
    
-  dispatcher.dispatch({type: "FETCH_CONTACTS"});
+  //dispatcher.dispatch({type: "FETCH_CONTACTS"});
   
   axiosInstance.get('contacts')
     .then(function(response){

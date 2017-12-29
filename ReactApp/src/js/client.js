@@ -17,6 +17,7 @@ ReactDOM.render(
       <Route path="newContact" component={NewContact}></Route>
       <Route path="about" component={About}></Route>
       <Route path="login" component={Login}></Route>
+      <Route path="contacts" component={Contacts}></Route>
     </Route>
   </Router>,
 app);

@@ -1,7 +1,8 @@
 import {PropTypes, findDOMNode } from "react";
 import React from "react";
 //import * as LoginActions from "../actions/LoginActions";
-import * as ContactActions from "../actions/ContactActions"; 
+import * as ContactActions from "../actions/ContactActions";
+import ContactStore from "../stores/ContactStore"; 
 import Joi from 'joi';
 import validation from 'react-validation-mixin';
 import strategy from 'joi-validation-strategy';
@@ -12,7 +13,8 @@ export default class Login extends React.Component {
  constructor() {  
     super();
       this.state = {
-        user: {} // ?????????
+        user: {}, // ?????????
+        loggedIn: false
       };
    
    // VALIDATION STUFF 
@@ -33,7 +35,23 @@ export default class Login extends React.Component {
       password: findDOMNode(this.refs.password).value,
     };
   }
-   
+  
+  componentWillMount() {
+    ContactStore.on("change", this.loggedIn.bind(this));
+  }
+
+  // prevent memory leaks...
+  componentWillUnmount() {
+    ContactStore.removeListener("change", this.loggedIn.bind(this));
+  }
+
+  loggedIn() {
+    //this.props.history.pushState(null, "/contacts"); CANT DO THIS; 
+    this.setState({  // this didn't work until I put bind above on loggedIn
+      loggedIn: true
+    });
+  }
+
   login() {
        
     // VALIDATION STUFF      
@@ -47,7 +65,7 @@ export default class Login extends React.Component {
  
         //LoginActions.loginUser(this.state.user);
         ContactActions.loginUser(this.state.user);    
-        //this.props.history.pushState(null, "/");
+        //this.props.history.pushState(null, "/about"); // CANT GO HERE BECAUSE CALL HAS NOT COMPLETED
       }
     };
     
@@ -68,7 +86,12 @@ export default class Login extends React.Component {
   }
   
   render() {
-            
+  
+    if (this.state.loggedIn) {
+      this.props.history.pushState(null, "/contacts");
+      return null;
+    }
+
     return (
             <div class="top-content">
              

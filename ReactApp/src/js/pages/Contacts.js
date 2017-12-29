@@ -2,7 +2,7 @@
 // http://facebook.github.io/react/docs/component-specs.html#mounting-componentdidmount 
 
 import React from "react";
-
+import { Link } from "react-router";
 import AuthenticatedComponent from '../components/AuthenticatedComponent';
 
 import Contact from "../components/Contact";
@@ -88,9 +88,9 @@ export default AuthenticatedComponent(class Contacts extends React.Component {
     });
 
     return (
-      <div>
-        <h1>Contacts</h1>
+      <div>        
         {ContactComponents}
+        <p style={{marginBottom:'10px', marginTop:'10px'}}><Link to="newContact"><u><b>New Contact</b></u></Link></p>
       </div>
     );
   }
