@@ -1,5 +1,6 @@
 import dispatcher from "../dispatcher";
 import axios from "axios";
+import ContactStore from "../stores/ContactStore";
 
 const axiosInstance = axios.create({
       //baseURL: 'http://127.0.0.1:8529/_db/_system/react-contacts/contacts' // Foxx
@@ -38,8 +39,7 @@ export function loginUser(user) {
     console.log(response.data); 
     console.log(response.status);
     
-    //response.data.token
-
+    localStorage.setItem('jwt', response.data.token);
     dispatcher.dispatch({type: "LOGIN_USER", jwt: response.data.token });
   })
   .catch(function (response) {
@@ -49,12 +49,32 @@ export function loginUser(user) {
   });  
 }
 
+export function register(user) {
+  
+  const { email, password, confirmPassword } = user;
+
+  axiosInstance.post('auth/register', { 
+      email: email, 
+      password: password,
+      confirmPassword: confirmPassword
+  })
+  .then(function(response){
+    console.log(response.data); 
+    console.log(response.status);    
+  })
+  .catch(function (response) {
+    console.log(response);
+    console.log(response.status); 
+  });  
+}
+
 export function createContact(contact) {
   
-  const { id, name, email, address, phone } = contact; // Destructuring...  ES2015... https://babeljs.io/docs/learn-es2015/ 
+  const { id, name, email, address, phone } = contact;
 
+  axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('jwt');
   axiosInstance.post('contacts', {
-      //id: id, 
+      userEmail: ContactStore._user.email, 
       name: name, 
       email: email, 
       address: address, 
@@ -63,7 +83,7 @@ export function createContact(contact) {
   .then(function(response){
     console.log(response.data); 
     console.log(response.status);     
-    dispatcher.dispatch({type: "CREATE_CONTACT", contact: response.data });//contacts: response.data });
+    dispatcher.dispatch({type: "CREATE_CONTACT", contact: response.data });
   })
   .catch(function (response) {
     console.log(response);
@@ -72,62 +92,83 @@ export function createContact(contact) {
   });  
 }
 
-export function deleteContact(id) {
+export function reloadContactsFilteredBy(filter, value) {
   
-  axiosInstance.delete('contacts', {
-    params: {
-      ID: id
-    }
-  })
-  .then(function(response){
-    console.log(response.data); 
-    console.log(response.status);     
-    dispatcher.dispatch({type: "DELETE_CONTACT", contacts: response.data });
-  })
-  .catch(function (response) {
-    console.log(response);
-    console.log(response.status); 
-    dispatcher.dispatch({type: "ERROR_DELETE_CONTACT", contacts: response });
-  });    
+ axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('jwt');
+ axiosInstance.get('contacts/' + filter + '?value=' + value)
+   .then(function(response){
+     //console.log(response.data); 
+     console.log(response.status);
+     if (response.data.indexOf("<!DOCTYPE html>") === -1)     
+       dispatcher.dispatch({type: "RECEIVE_CONTACTS", contacts: response.data });
+   })
+   .catch(function (response) {
+     console.log(response);
+     console.log(response.status); 
+     dispatcher.dispatch({type: "ERROR_RECEIVE_CONTACTS", contacts: response });
+ });    
 }
 
-export function updateContact(contact) {
-   
-  const { id, name, email, address, phone } = contact; 
+///////////////////////////////////////////////////////////////////////////////////////
+//  NOT SUPPORTED / NOT USING
+//////////////////////////////////////////////////////////////////////////////////////
 
-  axiosInstance.put('contacts', {
-      id: id, 
-      name: name, 
-      email: email, 
-      address: address, 
-      phone: phone 
-  })
-  .then(function(response){
-    console.log(response.data); 
-    console.log(response.status);     
-    dispatcher.dispatch({type: "UPDATE_CONTACT", contacts: response.data });
-  })
-  .catch(function (response) {
-    console.log(response);
-    console.log(response.status); 
-    dispatcher.dispatch({type: "ERROR_UPDATE_CONTACT", contacts: response });
-  });  
-}
-
-export function reloadContacts() {
-   
-  //dispatcher.dispatch({type: "FETCH_CONTACTS"});
+// export function deleteContact(id) {
   
-  axiosInstance.get('contacts')
-    .then(function(response){
-      //console.log(response.data); 
-      console.log(response.status);
-      if (response.data.indexOf("<!DOCTYPE html>") === -1)     
-        dispatcher.dispatch({type: "RECEIVE_CONTACTS", contacts: response.data });
-    })
-    .catch(function (response) {
-      console.log(response);
-      console.log(response.status); 
-      dispatcher.dispatch({type: "ERROR_RECEIVE_CONTACTS", contacts: response });
-  });    
-}
+//   axiosInstance.delete('contacts', {
+//     params: {
+//       ID: id
+//     }
+//   })
+//   .then(function(response){
+//     console.log(response.data); 
+//     console.log(response.status);     
+//     dispatcher.dispatch({type: "DELETE_CONTACT", contacts: response.data });
+//   })
+//   .catch(function (response) {
+//     console.log(response);
+//     console.log(response.status); 
+//     dispatcher.dispatch({type: "ERROR_DELETE_CONTACT", contacts: response });
+//   });    
+// }
+
+// export function updateContact(contact) {
+   
+//   const { id, name, email, address, phone } = contact; 
+
+//   axiosInstance.put('contacts', {
+//       id: id, 
+//       name: name, 
+//       email: email, 
+//       address: address, 
+//       phone: phone 
+//   })
+//   .then(function(response){
+//     console.log(response.data); 
+//     console.log(response.status);     
+//     dispatcher.dispatch({type: "UPDATE_CONTACT", contacts: response.data });
+//   })
+//   .catch(function (response) {
+//     console.log(response);
+//     console.log(response.status); 
+//     dispatcher.dispatch({type: "ERROR_UPDATE_CONTACT", contacts: response });
+//   });  
+// }
+
+// export function reloadContacts() {
+   
+//   //dispatcher.dispatch({type: "FETCH_CONTACTS"});
+//   axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('jwt');
+//   axiosInstance.get('contacts')
+//     .then(function(response){
+//       //console.log(response.data); 
+//       console.log(response.status);
+//       if (response.data.indexOf("<!DOCTYPE html>") === -1)     
+//         dispatcher.dispatch({type: "RECEIVE_CONTACTS", contacts: response.data });
+//     })
+//     .catch(function (response) {
+//       console.log(response);
+//       console.log(response.status); 
+//       dispatcher.dispatch({type: "ERROR_RECEIVE_CONTACTS", contacts: response });
+//   });    
+// }

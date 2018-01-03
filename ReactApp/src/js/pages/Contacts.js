@@ -38,8 +38,7 @@ export default AuthenticatedComponent(class Contacts extends React.Component {
   getContacts() {
     this.setState({
       contacts: ContactStore.getAll(),
-    });
-    
+    });    
   }
 
 /////////////////////////////////////////////
@@ -48,7 +47,8 @@ export default AuthenticatedComponent(class Contacts extends React.Component {
 
 // Fetch data here according to https://facebook.github.io/react/tips/initial-ajax.html 
   componentDidMount() {
-    ContactActions.reloadContacts();  // Flux pattern -> tell Action to go get the contacts from Web API after rendering occurs; then,
+    ContactActions.reloadContactsFilteredBy("userEmail", ContactStore._user.email);
+                                      // Flux pattern -> tell Action to go get the contacts from Web API after rendering occurs; then,
   }                                   //                 action will send a dispatch to the store, which will create change event which this component is listening for
 
   updateContact(contact) {
@@ -74,28 +74,33 @@ export default AuthenticatedComponent(class Contacts extends React.Component {
   render() {
     
     const { contacts } = this.state;
- 
-    // map contacts "snatched" from state to ContactComponents
-    const ContactComponents = contacts.map((contact) => {
-                                        
-                     // inject into Contact props...   we are binding to the context of Contacts who is in charge of sending Actions to Action
-        return <Contact updateContact={this.updateContact.bind(this)} 
-                        cancelEdit={this.cancelEdit.bind(this)} 
-                        editContact={this.editContact.bind(this)} 
-                        deleteContact={this.deleteContact.bind(this)} 
-                        key={contact.id} {...contact}/>; 
-                                 // NOTE: ... means inject all the other properties into Contact; Contact's props -> { edit, email, name, etc. }
-    });
+    
+    if (contacts && Array.isArray(contacts)) {
 
-    return (
-      <div>        
-        {ContactComponents}
-        <p style={{marginBottom:'10px', marginTop:'10px'}}><Link to="newContact"><u><b>New Contact</b></u></Link></p>
-      </div>
-    );
+      // map contacts "snatched" from state to ContactComponents
+      const ContactComponents = contacts.map((contact) => {
+      
+        // inject into Contact props...   we are binding to the context of Contacts who is in charge of sending Actions to Action
+        return <Contact updateContact={this.updateContact.bind(this)} 
+        cancelEdit={this.cancelEdit.bind(this)} 
+        editContact={this.editContact.bind(this)} 
+        deleteContact={this.deleteContact.bind(this)} 
+        key={contact.id} {...contact}/>; 
+        // NOTE: ... means inject all the other properties into Contact; Contact's props -> { edit, email, name, etc. }
+      });
+
+      ContactComponents.push(<div class="col-sm-6 col-md-4">
+      <Link to="newContact"><u><b>New Contact</b></u></Link>
+      </div>);
+
+      return (
+      <div>{ContactComponents}</div>
+      );
+    }
+
+    return null;
   }
 }
 
 // new
 );
-

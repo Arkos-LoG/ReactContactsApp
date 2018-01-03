@@ -23,8 +23,7 @@ export default class NewContact extends React.Component {
     };
     this.getValidatorData = this.getValidatorData.bind(this);
     this.renderHelpText = this.renderHelpText.bind(this);
-    this.getClasses = this.getClasses.bind(this);
-    
+    this.getClasses = this.getClasses.bind(this);    
   }
      
   // VALIDATION STUFF 
@@ -54,8 +53,7 @@ export default class NewContact extends React.Component {
     };
     
     // VALIDATION STUFF 
-    this.props.validate(onValidate);
-                
+    this.props.validate(onValidate);                
   } 
     
   handleChange(e) {
@@ -73,10 +71,8 @@ export default class NewContact extends React.Component {
         case "phone":
           this.state.contact.phone = e.target.value;
           break;
-    }
-    
+    }    
   }
-
     
   render() {
             
@@ -151,7 +147,6 @@ export default class NewContact extends React.Component {
     );
   }
 
-
  // VALIDATION STUFF 
   renderHelpText(message) {
     return (
@@ -181,5 +176,3 @@ NewContact.propTypes = {
 };
 
 module.exports = validation(strategy)(NewContact);
-
- 

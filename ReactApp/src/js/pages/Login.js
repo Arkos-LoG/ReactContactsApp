@@ -1,6 +1,6 @@
 import {PropTypes, findDOMNode } from "react";
 import React from "react";
-//import * as LoginActions from "../actions/LoginActions";
+import { Link } from "react-router";
 import * as ContactActions from "../actions/ContactActions";
 import ContactStore from "../stores/ContactStore"; 
 import Joi from 'joi';
@@ -13,7 +13,7 @@ export default class Login extends React.Component {
  constructor() {  
     super();
       this.state = {
-        user: {}, // ?????????
+        user: {},
         loggedIn: false
       };
    
@@ -24,8 +24,7 @@ export default class Login extends React.Component {
     };
     this.getValidatorData = this.getValidatorData.bind(this);
     this.renderHelpText = this.renderHelpText.bind(this);
-    this.getClasses = this.getClasses.bind(this);
-    
+    this.getClasses = this.getClasses.bind(this);    
   }
      
   // VALIDATION STUFF 
@@ -38,6 +37,7 @@ export default class Login extends React.Component {
   
   componentWillMount() {
     ContactStore.on("change", this.loggedIn.bind(this));
+    ContactStore.logout();
   }
 
   // prevent memory leaks...
@@ -59,13 +59,9 @@ export default class Login extends React.Component {
       if (error) {
         //form has errors; do not submit
       } else {
-        //no errors; continue...
-        
-        //this.state.contact.id = Date.now();
- 
-        //LoginActions.loginUser(this.state.user);
+        //no errors; continue...         
         ContactActions.loginUser(this.state.user);    
-        //this.props.history.pushState(null, "/about"); // CANT GO HERE BECAUSE CALL HAS NOT COMPLETED
+        //this.props.history.pushState(null, "/contacts"); // CANT GO HERE BECAUSE CALL/component HAS NOT COMPLETED
       }
     };
     
@@ -116,7 +112,7 @@ export default class Login extends React.Component {
                                      {this.renderHelpText(this.props.getValidationMessages('name'))}
                                 </div>                                                                                                                   
                                 <div className={this.getClasses('password')}>                                     
-                                    <input type="text" 
+                                    <input type="password" 
                                         maxLength="30" 
                                         onChange={this.handleChange.bind(this)} 
                                         placeholder="Password..." 
@@ -127,7 +123,8 @@ export default class Login extends React.Component {
                                     />
                                     {this.renderHelpText(this.props.getValidationMessages('password'))}
                                 </div>                                                         
-                                <button class="btn btn-primary" onClick={this.login.bind(this)}>Submit</button>                            
+                                <button class="btn btn-primary" onClick={this.login.bind(this)} style={{marginRight: '25px'}}>Login</button>
+                                <Link to="register"><u><b>Register</b></u></Link>                            
                             </div>
                         </div>
                     </div>

@@ -8,7 +8,6 @@ class ContactStore extends EventEmitter {
   constructor() {
     super()
     this.contacts = []; // set to empty array until Action dispatches RECEIVE_CONTACTS
-
     this._user = null;
     this._jwt = null;
   }
@@ -30,9 +29,12 @@ class ContactStore extends EventEmitter {
       return this.contacts; 
   }
 
-  /// FOR LOGIN /////////
   isLoggedIn() {
     return !!this._user;
+  }
+
+  logout() {
+    this._user = null;
   }
 
   handleActions(action) {
@@ -60,18 +62,17 @@ class ContactStore extends EventEmitter {
           break;
         case "CANCEL_EDIT":  
           this.updateEditStatusForContact(action.id, false);
-          break;
-        
+          break;        
         case "LOGIN_USER":
           this._jwt = action.jwt;
           this._user = jwt_decode(this._jwt);
           //this.emitChange();
           this.emit("change");
           break;
-        case "LOGOUT_USER":
-          //this._user = null;
-          //this.emitChange();
-          break;
+        // case "LOGOUT_USER":
+        //   //this._user = null;
+        //   //this.emitChange();
+        //   break;
       }      
   }
 

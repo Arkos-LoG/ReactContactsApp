@@ -19,7 +19,6 @@ export default class Contact extends React.Component {
         }
       };
   }
-
                             
   handleChange(e) {
 
@@ -60,7 +59,6 @@ export default class Contact extends React.Component {
     this.props.cancelEdit(this.props.id);   
   }
 
-
   render() {
     const { id, edit, name, email, address, phone } = this.props;
           
@@ -92,15 +90,13 @@ export default class Contact extends React.Component {
                   <p><b>Email:  </b>{email}</p>
                   <p><b>Address:  </b>{address}</p>
                   <p><b>Phone:  </b>{phone}</p>
-                  <p><a href="#" class="btn btn-primary" role="button" onClick={this.editContact.bind(this)}>Edit</a> 
-                     <a href="#" class="btn btn-danger" role="button"  onClick={this.deleteContact.bind(this)}>Delete</a></p>
+                  {/* <p><a href="#" class="btn btn-primary" role="button" onClick={this.editContact.bind(this)}>Edit</a> 
+                     <a href="#" class="btn btn-danger" role="button"  onClick={this.deleteContact.bind(this)}>Delete</a></p> */}
               </div>
             </div>
           </div>   
   
    );
-    
-    
+        
   }
 }
-
